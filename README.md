@@ -76,9 +76,7 @@ docmind/
 │   ├── tools.py        # Agent tools (calculator, search, reader, stats)
 │   ├── prompts.py      # System prompts per intent type
 │   ├── agent.py         # LangGraph workflow definition
-│   └── assistant.py     # Session management + workflow invocation
-├── sessions/            # Auto-generated: one JSON file per conversation
-├── logs/                # Auto-generated: tool usage logs per session
+│   └── assistant.py     # Session management + workflow invocation               
 ├── main.py               # CLI entry point
 ├── requirements.txt
 └── .env.example
