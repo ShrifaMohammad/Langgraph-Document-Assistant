@@ -1,4 +1,4 @@
-# Langgraph-Document-Assistant (Intelligent Document Assistant)
+# Intelligent Document Assistant (Langgraph-Doc-Assistant)
 
 A multi-agent AI assistant built with **LangChain** and **LangGraph** that
 answers questions, summarizes, and performs calculations on financial and
