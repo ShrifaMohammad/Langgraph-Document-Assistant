@@ -10,18 +10,60 @@ def get_intent_classification_prompt() -> PromptTemplate:
         input_variables=["user_input", "conversation_history"],
         template="""You are an intent classifier for a document processing assistant.
 
-Given the user input and conversation history, classify the user's intent into one of these categories:
-- qa: Questions about documents or records that do not require calculations.
-- summarization: Requests to summarize or extract key points from documents that do not require calculations.
-- calculation: Mathematical operations or numerical computations. Or questions about documents that may require calculations
-- unknown: Cannot determine the intent clearly
+Given the user input and conversation history, classify the user's intent into exactly one of these categories:
+
+1. qa
+   Questions about documents or records that do not require calculations.
+   Examples:
+   - "What does the service agreement say about termination?"
+   - "Who is the client in invoice INV-002?"
+   - "What is the payment term on INV-001?"
+   - "What is the status of claim CLM-001?"
+
+2. summarization
+   Requests to summarize or extract key points from documents, without calculations.
+   Examples:
+   - "Summarize all contracts"
+   - "Give me the key points of the service agreement"
+   - "Can you give me a brief overview of invoice INV-003?"
+   - "Summarize the insurance claim"
+
+3. calculation
+   Mathematical operations or numerical computations, including questions about documents whose answer requires adding, subtracting, multiplying, dividing, or averaging numbers.
+   Examples:
+   - "Calculate the sum of all invoice totals"
+   - "What is the total amount in invoice INV-001?" (requires adding subtotal and tax)
+   - "What is 15% of the contract value?"
+   - "What is the average amount across all invoices?"
+
+4. unknown
+   The request is unrelated to documents, or is too vague or ambiguous to classify.
+   Examples:
+   - "What's the weather today?"
+   - "Tell me a joke"
+   - "Hello"
+   - "Can you help me?"
+
+Use the conversation history to resolve references such as "that one", "it", or "the same invoice". A follow-up question should be classified by what it asks now, not by the previous message.
+
+Confidence scoring instructions:
+- Give a confidence value between 0.0 and 1.0.
+- 0.9 to 1.0: the request clearly matches exactly one category.
+- 0.7 to 0.89: the request most likely matches one category, but another is possible.
+- 0.4 to 0.69: the request is ambiguous and could reasonably belong to two categories.
+- Below 0.4: you are mostly guessing. Prefer the unknown category in this case.
+
+Reasoning instructions:
+- Write one or two short sentences explaining why you chose this category.
+- Mention the specific words or phrases in the user input that led to your decision.
+- If the request was ambiguous, state which other category you considered and why you rejected it.
 
 User Input: {user_input}
 
 Recent Conversation History:
 {conversation_history}
 
-Analyze the user's request and classify their intent with a confidence score and brief reasoning.
+Now classify the user's intent, and provide the confidence score and the reasoning.
 """
     )
 
